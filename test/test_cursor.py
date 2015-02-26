@@ -1,7 +1,7 @@
 
 import sys
 
-sys.path.append('./build/lib.linux-x86_64-2.7/')
+sys.path.append('../build/lib.linux-x86_64-2.7/')
 
 from voidptr import VoidPtr as vp
 import spapi as sp

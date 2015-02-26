@@ -27,14 +27,11 @@ int   sp_prepare(void*, ...);
 int   sp_commit(void*, ...);
 void *sp_cursor(void*, ...);
 void *sp_type(void*, ...);
-
-
 """
 
 ffi = FFI()
 ffi.cdef(cdef)
-c = ffi.dlopen('./build/sp.so')
-
+c = ffi.dlopen('../build/sp.so')
 
 def _( s ):
     global ffi
@@ -89,12 +86,6 @@ for i in xrange(10):
     print k,"->",ffi.string( ffi.cast("char *",val) )
     #print c.sp_set(o, _("value"),value, szv )
     #print "dbset",o,key,value,c.sp_set(db, o)
-
-
-
-
-
-
 
 
 #o = c.sp_object(db);
