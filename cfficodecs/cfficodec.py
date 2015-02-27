@@ -11,7 +11,9 @@ class BaseCodec(object):
         # types
         self.TYPE_STR = 99
         self.TYPE_UTF8 = 100 
-        self.TYPE_NUM = 101
+        self.TYPE_NUM = 101  # Number 
+        self.TYPE_LST = 102  # list
+        self.TYPE_TPL = 103  # tuple
 
         # sizes in bytes
         self.DATALENSZ = 2 
@@ -42,8 +44,8 @@ class BaseCodec(object):
         return cdata
 
 
-    # warn: decode relies on external data size
-    # this is done with database context
+    # warn: decode count on external data size
+    # this is done with database context when retrieve data
     # 
     def decode(self, cdata, cdata_len):
         #sz = self.TYPESZ + cdata_sz
@@ -66,16 +68,33 @@ class BaseCodec(object):
             return ctype[0],buff[self.USRTYPESZ:-1]
         if ctype[0] == self.TYPE_UTF8:
             return ctype[0],buff[self.USRTYPESZ:-1].decode('utf-8')
+        if ctype[0] == self.TYPE_LST:
+            s=  buff[-3:-1] + buff[self.USRTYPESZ:-1]
+            return ctype[0],marshal.loads(s)
+        if ctype[0] == self.TYPE_TPL:
+            s=  buff[-3:-1] + buff[self.USRTYPESZ:-1]
+            return ctype[0],marshal.loads(s)
 
 
 
     def encode(self, data):
        if isinstance(data, Number): 
-           return self.enc_str(marshal.dumps(data), self.TYPE_NUM) 
+            return self.enc_str(marshal.dumps(data), self.TYPE_NUM) 
        if isinstance(data, str ):
             return self.enc_str(data, self.TYPE_STR)
        if isinstance(data, unicode ):
             return self.enc_str(data.encode('utf-8'),self.TYPE_UTF8)
+       if isinstance(data, list ):
+            s = marshal.dumps(data)
+            return self.enc_str( s[2:]+s[:2], self.TYPE_LST )
+       if isinstance(data, tuple ):
+            s = marshal.dumps(data)
+            return self.enc_str( s[2:]+s[:2], self.TYPE_TPL )
+       # if you wonde why [:2] is metadata and len of list
+       # i don''t want to break lex order until find a way how
+       # to inject custom comparator
+ 
+
 
 
 

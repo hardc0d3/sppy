@@ -52,7 +52,7 @@ def u32t( i ):
 
 env = c.sp_env( )
 ctl = c.sp_ctl( env )
-c.sp_set( ctl, _("sophia.path"), _("./test_data") )
+c.sp_set( ctl, _("sophia.path"), _("../test_data") )
 c.sp_set( ctl, _("db"), _("test_cffi_codec") )
 db = c.sp_get( ctl, _("db.test_cffi_codec") )
 print "open db", c.sp_open ( env )
@@ -61,15 +61,16 @@ o = c.sp_object(db);
 key = "thekey"
 value = "thevalue"
 
+count = 10
 
-for i in xrange(100):
+for i in xrange(count):
     o = c.sp_object(db);
     #key = _( "00%d" % i )
     #value = _( "11%d" % i )
    
     key = enco.encode( i )
-    value = enco.encode( u"буква номер %d" % i )
-
+    #value = enco.encode( u"буква номер %d" % i )
+    value = enco.encode( (i,i+10,i+100,i+1000) )
     szk = ffi.cast("int ",ffi.sizeof(key ) )
     szv = ffi.cast("int ",ffi.sizeof(value ) ) 
 
@@ -79,7 +80,7 @@ for i in xrange(100):
     print "free", c.sp_destroy(o)
 
 
-for i in xrange(100):
+for i in xrange(count):
     o = c.sp_object(db);
     key = enco.encode( i )
     szk = ffi.cast("int ",ffi.sizeof(key ) )
