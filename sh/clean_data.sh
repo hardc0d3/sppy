@@ -1,1 +1,1 @@
-rm -rf test_data/*
+rm -rf ../test_data/*

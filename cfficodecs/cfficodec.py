@@ -21,44 +21,51 @@ class BaseCodec(object):
         self.METASZ = self.USRTYPESZ + self.DATALENSZ
 
     # byte encoding 
-    #               uint8       uint16    char*
-    # [ 1 user ] [ 1 type ] [ 2 len ] [ len data ]
-
+    #               uint8      char*
+    # [ 1 user ] [ 1 type ] [  data ]
+    # data len is retrieved from db !
+    # len is not part of encoding because it fucks order
    
     def enc_str(self, s, itp ):
-        sc="xxxx"+s
+        sc="xx"+s
         cdata = self.ffi.new("char []",sc)
         ctype = self.ffi.new('uint8_t *',itp)
-        clen  = self.ffi.new('uint16_t *',len(s) )
+        #clen  = self.ffi.new('uint16_t *',len(s) )
         typebuff =  self.ffi.buffer(ctype,self.USRTYPESZ)        
-        lenbuff  =  self.ffi.buffer(clen,self.DATALENSZ )
+        #lenbuff  =  self.ffi.buffer(clen,self.DATALENSZ )
 
-        databuff = self.ffi.buffer(cdata,len(sc))
+        databuff = self.ffi.buffer(cdata)
         databuff[1] = typebuff [0]
-        databuff[2] = lenbuff  [0]
-        databuff[3] = lenbuff  [1]
+        #databuff[2] = lenbuff  [0]
+        #databuff[3] = lenbuff  [1]
+        print "enc cdata len",len(cdata)
         return cdata
 
 
-    def decode(self, cdata ):
-        buff = self.ffi.buffer ( cdata, self.METASZ )
+    # warn: decode relies on external data size
+    # this is done with database context
+    # 
+    def decode(self, cdata, cdata_len):
+        #sz = self.TYPESZ + cdata_sz
+        #print "decode cdata len",len(cdata)
+        buff = self.ffi.buffer ( cdata,cdata_len )
         ctype = self.ffi.new('uint8_t*',0 )
-        clen  = self.ffi.new('uint16_t*',2 )
-        lenbuff = self.ffi.buffer ( clen, self.DATALENSZ )
-        typebuff = self.ffi.buffer ( ctype, self.TYPESZ )
+        #clen  = self.ffi.new('uint16_t*',2 )
+        #lenbuff = self.ffi.buffer ( clen, self.DATALENSZ )
+        typebuff = self.ffi.buffer ( ctype, self.USRTYPESZ )
 
         typebuff[0] = buff [1]
-        lenbuff[0] = buff [2]
-        lenbuff[1] = buff [3]         
+        #lenbuff[0] = buff [2]
+        #lenbuff[1] = buff [3]         
 
-        buff = self.ffi.buffer ( cdata, clen[0]+self.METASZ ) 
-       # ( typeID, byteLEN, data )
+        #buff = self.ffi.buffer ( cdata, clen[0]+self.METASZ ) 
+       # ( typeID,  data )
         if ctype[0] == self.TYPE_NUM:
-            return ctype[0],clen[0], marshal.loads( buff[self.METASZ:] )
+            return ctype[0], marshal.loads( buff[self.USRTYPESZ:-1] )
         if ctype[0] == self.TYPE_STR:
-            return ctype[0],clen[0],buff[self.METASZ:]
+            return ctype[0],buff[self.USRTYPESZ:-1]
         if ctype[0] == self.TYPE_UTF8:
-            return ctype[0],clen[0],buff[self.METASZ:].decode('utf-8')
+            return ctype[0],buff[self.USRTYPESZ:-1].decode('utf-8')
 
 
 

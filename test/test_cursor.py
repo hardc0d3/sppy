@@ -38,7 +38,7 @@ print "set order < to o",sp.set_field(o,"order","<")
 print "set order > to o2",sp.set_field(o2,"order",">")
 
 
-print "inti cursors"
+print "init cursors"
 print cursor.tag, sp.cursor(db,o,cursor)
 print cursor2.tag, sp.cursor(db,o2,cursor2)
 
