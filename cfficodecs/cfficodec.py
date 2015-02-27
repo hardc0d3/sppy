@@ -40,7 +40,7 @@ class BaseCodec(object):
         databuff[1] = typebuff [0]
         #databuff[2] = lenbuff  [0]
         #databuff[3] = lenbuff  [1]
-        print "enc cdata len",len(cdata)
+        #print "enc cdata len",len(cdata)
         return cdata
 
 

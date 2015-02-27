@@ -61,7 +61,7 @@ o = c.sp_object(db);
 key = "thekey"
 value = "thevalue"
 
-count = 10
+count = 100000
 
 for i in xrange(count):
     o = c.sp_object(db);
@@ -74,25 +74,28 @@ for i in xrange(count):
     szk = ffi.cast("int ",ffi.sizeof(key ) )
     szv = ffi.cast("int ",ffi.sizeof(value ) ) 
 
-    print c.sp_set(o, _("key"),key  , szk  ) 
-    print c.sp_set(o, _("value"),value, szv )  
-    print "dbset",c.sp_set(db, o)
-    print "free", c.sp_destroy(o)
+    c.sp_set(o, _("key"),key  , szk  ) 
+    c.sp_set(o, _("value"),value, szv )  
+    c.sp_set(db, o)
+    c.sp_destroy(o)
 
 
 for i in xrange(count):
     o = c.sp_object(db);
     key = enco.encode( i )
+    #print key
     szk = ffi.cast("int ",ffi.sizeof(key ) )
     vsz = ffi.new("int *", 0 )
     ksz = ffi.new("int *", 0 )
     #szv = ffi.cast("int ",ffi.sizeof(value ) )
 
-    print c.sp_set(o, _("key"),key  , szk  )
-    r = c.sp_get(db, o) 
+    c.sp_set(o, _("key"),key  , szk  )
+    r = c.sp_get(db, o)
     val = c.sp_get(r,_("value"), vsz )
+        
+
     t = enco.decode(val,vsz[0])
-    print vsz[0]
+    #print vsz[0]
     print i,"->",t[0],t[1]
 
 
