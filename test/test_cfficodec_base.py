@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+
+class AlaBala(object):
+    def __init__(self):
+        self.name = "name"
+        self.test = "test"
+
+
 import sys
 sys.path.append('../cfficodecs')
 
@@ -31,5 +38,6 @@ ls = c.encode ( [1,2,3] )
 lt = c.encode ( (1,11234,12341234) )
 print c.decode(ls,len(ls) )
 print c.decode(lt,len(lt) )
+
 
 

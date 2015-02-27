@@ -76,26 +76,24 @@ class BaseCodec(object):
             return ctype[0],marshal.loads(s)
 
 
-
+    
     def encode(self, data):
-       if isinstance(data, Number): 
+        if isinstance(data, Number): 
             return self.enc_str(marshal.dumps(data), self.TYPE_NUM) 
-       if isinstance(data, str ):
+        if isinstance(data, str ):
             return self.enc_str(data, self.TYPE_STR)
-       if isinstance(data, unicode ):
+        if isinstance(data, unicode ):
             return self.enc_str(data.encode('utf-8'),self.TYPE_UTF8)
-       if isinstance(data, list ):
+        if isinstance(data, list ):
             s = marshal.dumps(data)
             return self.enc_str( s[2:]+s[:2], self.TYPE_LST )
-       if isinstance(data, tuple ):
+        if isinstance(data, tuple ):
             s = marshal.dumps(data)
             return self.enc_str( s[2:]+s[:2], self.TYPE_TPL )
        # if you wonde why [:2] is metadata and len of list
        # i don''t want to break lex order until find a way how
        # to inject custom comparator
  
-
-
 
 
    
