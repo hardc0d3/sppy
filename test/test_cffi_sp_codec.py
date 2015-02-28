@@ -2,8 +2,8 @@
 import sys
 sys.path.append('../cfficodecs')
 
-from cfficodec import  BaseCodec
-enco = BaseCodec()
+from cfficodec import  BasePyCodec
+enco = BasePyCodec()
 
 
 from cffi import FFI

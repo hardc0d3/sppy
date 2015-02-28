@@ -3,7 +3,33 @@ import marshal
 from numbers import Number
 
 
-class BaseCodec(object):
+
+class CharString(object):
+    def __init__( self, ffi, lib ):
+        self.ffi = ffi
+        self.f = self.ffi
+        self.lib = lib
+        #self.cdata = self.f.NULL
+
+    def encode ( self, string ):
+        ptr =  self.f.new("char []",string)
+
+        # how to free memory ?
+        #
+        #
+        return ptr
+
+    def decode ( self, cdata ):
+        if cdata == self.f.NULL:
+            return None
+        s = self.f.string( cdata ) 
+        #if self.cdata is not self.f.NULL:
+        #self.lib.free(cdata)
+        return s
+     
+
+
+class BasePyCodec(object):
 
     def __init__( self ):
         self.ffi = cffi.FFI()

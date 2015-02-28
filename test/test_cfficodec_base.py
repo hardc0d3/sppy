@@ -9,8 +9,8 @@ class AlaBala(object):
 import sys
 sys.path.append('../cfficodecs')
 
-from cfficodec import  BaseCodec 
-c = BaseCodec()
+from cfficodec import  BasePyCodec 
+c = BasePyCodec()
 
 a = 999
 

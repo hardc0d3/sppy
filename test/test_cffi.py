@@ -45,6 +45,9 @@ def u32t( i ):
 
 
 env = c.sp_env( )
+
+c.sp_type(env)
+
 ctl = c.sp_ctl( env )
 c.sp_set( ctl, _("sophia.path"), _("./test_data") )
 c.sp_set( ctl, _("db"), _("test_cffi") )
