@@ -1,7 +1,8 @@
 '''
 _spapi_cffi
+python cffi based wrapper for SophiaDB, sphia.org
 
-Py cffi wrapper Copyright (c) Dobri Stoilov
+Copyright (c) Dobri Stoilov hardc0d3
 BSD License
 '''
 from numbers import Number
@@ -19,6 +20,15 @@ class NTMBS(object):
 
      def encode( self, s):
          return self.ffi.new("char[]",s)
+
+class CharLen(object):
+     def __init__(self,ffi):
+         self.ffi = ffi
+
+     def decode( self,nts, sz ):
+         return self.ffi.buffer( self.ffi.cast ("char*",nts ),sz )[:]
+
+
 
 class CastIntCodec(object):
      def __init__(self,ffi):
@@ -40,13 +50,15 @@ class Wrap(object):
         self.cd_sz = 0
         self.codec = codec
         self._ = self.decode
-        self.cdargs = []
+        # to support ordering
+        self.cdargs = [null]*len(args)
 
-        for arg in args:
-            if isinstance(arg,Wrap):
-                self.cdargs.append(arg.cd)
-            if isinstance(arg,sp.ffi.CData):
-                self.cdargs.append(arg)
+        for argt in enumerate(args):
+            if isinstance(argt[1],Wrap):
+                self.cdargs[argt[0]]=argt[1].cd
+            if isinstance(argt[1],sp.ffi.CData):
+                self.cdargs[argt[0]]=argt[1]
+            ''' # not needed now
             if isinstance(arg, Number):
                 if arg >= 0:
                     # wrap ( cdata ( encode unum
@@ -55,10 +67,10 @@ class Wrap(object):
                 else: 
                     #self.signed_cdargs.append(arg)
                     pass
-            if isinstance(arg, str ):
-                    self.cdargs.append( NTMBS( sp.ffi ).encode( arg ) ) 
+            '''
+            if isinstance(argt[1], str ):
+                    self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) ) 
                     pass
-        print self.cdargs
         if len(self.cdargs) == 0:
             self.cd = fun()
         else:
@@ -85,7 +97,7 @@ class SpApiFFI(SpApi):
         self.null = self.f.NULL
         self.codec_ntmbs = NTMBS(self.ffi) 
         self.codec_castint = CastIntCodec(self.ffi)
- 
+        self.codec_charlen = CharLen(self.ffi) 
     def env(self, *args):
                    # sp,  codec,  fun,           args
         return Wrap( self, None, self.lib.sp_env, args)
@@ -115,7 +127,16 @@ class SpApiFFI(SpApi):
         return self.lib.sp_delete( *args) 
 
     def get( self, *args ):
-        return self.lib.sp_get( *args )
+        # variable arg semantics
+        if len(args) == 3 and isinstance(args[1],str):
+            # here return data, datasz
+            # should make any difference
+            #uint32_t size;
+            #sp_get(object, "field", &size)
+            return Wrap( self, self.codec_charlen, self.lib.sp_get, args )
+        else:
+            return Wrap( self, None, self.lib.sp_get, args ) 
+        
  
     def drop(self, *args):
         return self.lib.sp_drop( *args)

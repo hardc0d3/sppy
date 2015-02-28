@@ -1,22 +1,6 @@
-'''
-sp_env
-sp_ctl
-sp_object
-sp_open
-sp_destroy
-sp_error
-sp_set
-sp_delete
-sp_get
-sp_drop
-sp_cursor
-sp_begin
-sp_commit
-sp_type
-'''
 
 class SpApi(object):
-    """ sophia api wrapper """
+    """ sophia api interface """
 
     def __init__( self, ffi ):
         self.f = ffi
