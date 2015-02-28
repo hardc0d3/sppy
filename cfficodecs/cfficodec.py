@@ -3,29 +3,32 @@ import marshal
 from numbers import Number
 
 
+class BaseCtoPy(object):
+    def __inti__( self ):
+        self.ffi = cffi.FFI()
 
-class CharString(object):
-    def __init__( self, ffi, lib ):
-        self.ffi = ffi
-        self.f = self.ffi
-        self.lib = lib
-        #self.cdata = self.f.NULL
+    def new_string( s ):
+        return self.ffi.new("char[]",s)
+    def new_string_sz( s, sz ):
+        return self.ffi.new("char[%d]" % sz , s )
+    def cast_string( cds ):
+        return self.ffi.cast("char *",cds )
+    
+    def sizeof( cdo ):
+        return self.ffi.sizeof( cdo ) 
+    
+    def cast_uint32_t( uint ):
+        return self.ffi.cast("uint32_t",uint)
+    def cast_uint16_t( uint ):
+        return self.ffi.cast("uint16_t",uint)
+    def new_uint32_t( uint ):
+        return self.ffi.new("uint32_t*",uint)
+    def new_uint16_t( uint ):
+        return self.ffi.new("uint16_t*",uint)
+       
+          
 
-    def encode ( self, string ):
-        ptr =  self.f.new("char []",string)
 
-        # how to free memory ?
-        #
-        #
-        return ptr
-
-    def decode ( self, cdata ):
-        if cdata == self.f.NULL:
-            return None
-        s = self.f.string( cdata ) 
-        #if self.cdata is not self.f.NULL:
-        #self.lib.free(cdata)
-        return s
      
 
 
