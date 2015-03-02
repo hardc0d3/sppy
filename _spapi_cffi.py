@@ -98,6 +98,9 @@ class SpApiFFI(SpApi):
         self.codec_ntmbs = NTMBS(self.ffi) 
         self.codec_castint = CastIntCodec(self.ffi)
         self.codec_charlen = CharLen(self.ffi) 
+
+
+    # codec is for returned value.decode()
     def env(self, *args):
                    # sp,  codec,  fun,           args
         return Wrap( self, None, self.lib.sp_env, args)
@@ -117,14 +120,14 @@ class SpApiFFI(SpApi):
         return Wrap(self, self.codec_castint, self.lib.sp_destroy, args )
     
     def error( self, *args):
-        return self.lib.sp_error( *args) 
+        return Wrap(self,  self.codec_castint, self.lib.sp_error, args )
 
     def set ( self, *args ):
         #            sp    codec    fun             args
         return Wrap(self, self.codec_castint , self.lib.sp_set ,args )
  
     def delete(self, *args):
-        return self.lib.sp_delete( *args) 
+        return Wrap(self, self.codec_castint , self.lib.sp_delete ,args )
 
     def get( self, *args ):
         # variable arg semantics
@@ -136,19 +139,18 @@ class SpApiFFI(SpApi):
             return Wrap( self, self.codec_charlen, self.lib.sp_get, args )
         else:
             return Wrap( self, None, self.lib.sp_get, args ) 
-        
  
     def drop(self, *args):
-        return self.lib.sp_drop( *args)
+        return Wrap(self, self.codec_castint , self.lib.sp_drop ,args )
     
     def cursor(self, *args):
-        return self.lib.sp_cursor( *args)
- 
+        return Wrap(self, None , self.lib.sp_cursor ,args )
+    
     def begin(self, *args):
-        return self.lib.sp_begin( *args)
+        return Wrap(self, None , self.lib.sp_begin ,args )
  
     def commit(self, *args):
-        return self.lib.sp_commit( *args)
+        return Wrap(self, self.codec_castint , self.lib.sp_commit ,args ) 
 
     def type( self, *args):
         return Wrap(self,self.codec_ntmbs, self.lib.sp_type, args)
