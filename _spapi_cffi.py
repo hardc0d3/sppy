@@ -68,14 +68,8 @@ class Wrap(object):
                 self.cdargs[argt[0]]=argt[1]
             # not needed now
             if isinstance(argt[1], Number):
-                if argt[1] >= 0:
-                    # wrap ( cdata ( encode unum
-                    self.cdargs[argt[0]]=self.in_codec.new_uint32_t(argt[1])
-                    pass
-                    #self.unsigned_cdargs.append(arg)
-                else: 
-                    #self.signed_cdargs.append(arg)
-                    pass
+                #to doget param input codec
+                self.cdargs[argt[0]]=self.in_codec.new_uint32_t(argt[1])
             
             if isinstance(argt[1], str ):
                     self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) ) 

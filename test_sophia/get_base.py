@@ -1,4 +1,5 @@
 import sys
+import time
 sys.path.append('../')
 sys.path.append('../cfficodecs')
 import _spapi_cdef
@@ -16,7 +17,7 @@ spapi = SpApiFFI( sp_dl )
 
 
 
-env  = Env( spapi, "../test_data/env1")
+env  = Env( spapi, "/dataset/env1")
 #print "env open",env.open()
 
 db = DB( env, "sophia_base_test")
@@ -27,15 +28,30 @@ print "env open",env.open()
 
 u32 = codec.cast_uint32_t
 
-count = 10000
+count = 100000
 
-print "set from 1 to %d numerical keys"
-
+print "get from 1 to %d numerical keys" % (count-1)
+s = time.time()
 for i in xrange(1,count):
-    db.set_u_s( i , "test number %d" % i )
+    db.get_u( i )
+e = time.time()
+es = e - s 
+print "%f",es
+print ""
 
 
-print "close db", db.close()
+print "get from 1 to %d string keys" % (count-1)
+s = time.time()
+for i in xrange(1,count):
+    key = "%d" % (i)
+    db.get_s( key )
+e = time.time()
+es = e -s
+print "%f",es
+print ""
+
+
+
 print "close env",env.close()
 
 
