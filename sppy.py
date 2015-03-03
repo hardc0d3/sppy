@@ -84,6 +84,31 @@ class DB(object):
         return self._set(key,value,4,len(value) )
 
 
+    def _get_(self,codec, key):
+       o = self.sp.object( self.db )
+       sz = self.sp.ffi.new("uint32_t*")
+       # how to free this
+       if o.cd != self.sp.ffi.NULL:
+           szk = self.sp.ffi.cast("uint32_t",len(key))
+           rc = self.sp.set( o, "key",key,szk )
+           #print "get set key",rc.decode()
+
+
+           res_o = self.sp.get( self.db, o )
+
+           res_v = self.sp.get(res_o,"value",sz )
+           res_v.cd_sz = sz[0] #!
+           #check
+           #res = res_v.decode()
+           #check
+           res = codec.decode(res_v.cd,sz[0])
+           rc = self.sp.destroy( o )
+           rc = self.sp.destroy( res_o )
+           #check
+           return res
+
+
+
 
     def _get(self, key,len_key):
        o = self.sp.object( self.db )

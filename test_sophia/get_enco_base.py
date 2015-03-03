@@ -50,6 +50,19 @@ es = e-s
 print "t:",es
 print ""
 
+sp = db.sp
+db = db.db
+o = sp.object(db)
+cursor = sp.cursor(db,o)
+if cursor.cd == sp.ffi.NULL:
+    print "cursor.cd = NULL"
+    exit()
+while  o != sp.ffi.NULL:
+    o = sp.get(cursor,o)
+    sz = sp.ffi.new("uint32_t*")
+    res_v = sp.get(o,"value",sz )
+    print enco.decode( res_v, sz[0])
+
 print "close env",env.close()
 
 

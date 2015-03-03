@@ -35,9 +35,9 @@ class BaseCtoPy(object):
 
 class BasePyCodec(object):
 
-    def __init__( self ):
-        self.ffi = cffi.FFI()
-        self.lib = self.ffi.dlopen(None)
+    def __init__( self, sp ):
+        self.ffi = sp.ffi
+        #self.lib = self.ffi.dlopen(None)
         # types
         self.TYPE_STR = 99
         self.TYPE_UTF8 = 100 
@@ -48,8 +48,8 @@ class BasePyCodec(object):
         # sizes in bytes
         self.DATALENSZ = 2 
         self.TYPESZ = 1
-        self.USRSZ = 1
-        self.USRTYPESZ = self.USRSZ + self.TYPESZ
+        self.USRSZ = 1 
+        self.USRTYPESZ = self.USRSZ + self.TYPESZ 
         self.METASZ = self.USRTYPESZ + self.DATALENSZ
 
     # byte encoding 
@@ -59,7 +59,7 @@ class BasePyCodec(object):
     # len is not part of encoding because it fucks order
    
     def enc_str(self, s, itp ):
-        sc="xx"+s
+        sc="xx"+s+"\x00"
         cdata = self.ffi.new("char []",sc)
         ctype = self.ffi.new('uint8_t *',itp)
         #clen  = self.ffi.new('uint16_t *',len(s) )
@@ -120,10 +120,9 @@ class BasePyCodec(object):
         if isinstance(data, tuple ):
             s = marshal.dumps(data)
             return self.enc_str( s[2:]+s[:2], self.TYPE_TPL )
-       # if you wonde why [:2] is metadata and len of list
-       # i don''t want to break lex order until find a way how
-       # to inject custom comparator
-       # here is the method todo http://sphia.org/ctl_db.html 
+       # len should be added 
+       # and to inject custom comparator
+       # here is the method how to do it todo http://sphia.org/ctl_db.html 
 
 
    
