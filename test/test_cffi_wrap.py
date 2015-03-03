@@ -8,7 +8,7 @@ from _spapi_cffi import Wrap
 
 sp_dl = '../build/sp.so'
 
-sp = SpApiFFI( _spapi_cdef.cdef, sp_dl )
+sp = SpApiFFI( sp_dl )
 
 env = sp.env()
 

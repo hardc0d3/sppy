@@ -4,24 +4,25 @@ from numbers import Number
 
 
 class BaseCtoPy(object):
-    def __inti__( self ):
-        self.ffi = cffi.FFI()
+    def __init__( self,sp ):
+        self.ffi = sp.ffi
+        self.u32 = self.cast_uint32_t
 
-    def new_string( s ):
+    def new_string( self,s ):
         return self.ffi.new("char[]",s)
-    def new_string_sz( s, sz ):
+    def new_string_sz( self,s, sz ):
         return self.ffi.new("char[%d]" % sz , s )
-    def cast_string( cds ):
+    def cast_string( self,cds ):
         return self.ffi.cast("char *",cds )
     
-    def sizeof( cdo ):
+    def sizeof( self,cdo ):
         return self.ffi.sizeof( cdo ) 
     
-    def cast_uint32_t( uint ):
+    def cast_uint32_t( self,uint ):
         return self.ffi.cast("uint32_t",uint)
-    def cast_uint16_t( uint ):
+    def cast_uint16_t(self, uint ):
         return self.ffi.cast("uint16_t",uint)
-    def new_uint32_t( uint ):
+    def new_uint32_t( self, uint ):
         return self.ffi.new("uint32_t*",uint)
     def new_uint16_t( uint ):
         return self.ffi.new("uint16_t*",uint)
@@ -122,7 +123,7 @@ class BasePyCodec(object):
        # if you wonde why [:2] is metadata and len of list
        # i don''t want to break lex order until find a way how
        # to inject custom comparator
- 
+       # here is the method todo http://sphia.org/ctl_db.html 
 
 
    

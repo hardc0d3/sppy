@@ -5,10 +5,16 @@ python cffi based wrapper for SophiaDB, sphia.org
 Copyright (c) Dobri Stoilov hardc0d3
 BSD License
 '''
+
+import sys
+sys.path.append('../cfficodecs')
+
+
 from numbers import Number
 import cffi
-
+import _spapi_cdef
 from _spapi import SpApi
+from cfficodec import BaseCtoPy
 null=None
 
 class NTMBS(object):
@@ -52,22 +58,25 @@ class Wrap(object):
         self._ = self.decode
         # to support ordering
         self.cdargs = [null]*len(args)
+        self.in_codec = BaseCtoPy(self.sp)
+
 
         for argt in enumerate(args):
             if isinstance(argt[1],Wrap):
                 self.cdargs[argt[0]]=argt[1].cd
             if isinstance(argt[1],sp.ffi.CData):
                 self.cdargs[argt[0]]=argt[1]
-            ''' # not needed now
-            if isinstance(arg, Number):
-                if arg >= 0:
+            # not needed now
+            if isinstance(argt[1], Number):
+                if argt[1] >= 0:
                     # wrap ( cdata ( encode unum
+                    self.cdargs[argt[0]]=self.in_codec.new_uint32_t(argt[1])
                     pass
                     #self.unsigned_cdargs.append(arg)
                 else: 
                     #self.signed_cdargs.append(arg)
                     pass
-            '''
+            
             if isinstance(argt[1], str ):
                     self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) ) 
                     pass
@@ -88,10 +97,10 @@ class Wrap(object):
 class SpApiFFI(SpApi):
     """ sophia api wrapper """
 
-    def __init__( self, cdef, dl ):
+    def __init__( self, dl ):
         self.ffi = cffi.FFI() 
         self.f = self.ffi
-        self.cdef = cdef
+        self.cdef = _spapi_cdef.cdef 
         self.f.cdef( self.cdef )
         self.lib = self.f.dlopen( dl )
         self.null = self.f.NULL
