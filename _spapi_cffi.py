@@ -66,11 +66,10 @@ class Wrap(object):
                 self.cdargs[argt[0]]=argt[1].cd
             if isinstance(argt[1],sp.ffi.CData):
                 self.cdargs[argt[0]]=argt[1]
-            # not needed now
+            # only uint support 
             if isinstance(argt[1], Number):
-                #to doget param input codec
+                #to do: get param input codec
                 self.cdargs[argt[0]]=self.in_codec.new_uint32_t(argt[1])
-            
             if isinstance(argt[1], str ):
                     self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) ) 
                     pass
@@ -80,10 +79,10 @@ class Wrap(object):
             self.cd = fun( *self.cdargs)
         
 
-    def decode(self):
+    def decode(self,sz):
         if self.codec is None or self.cd == self.sp.ffi.NULL: 
             return None
-        return self.codec.decode ( self.cd, self.cd_sz )
+        return self.codec.decode ( self.cd, sz )
 
 
 
