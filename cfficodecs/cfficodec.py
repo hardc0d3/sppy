@@ -35,8 +35,8 @@ class BaseCtoPy(object):
 
 class BasePyCodec(object):
 
-    def __init__( self, sp ):
-        self.ffi = sp.ffi
+    def __init__( self, ffi ):
+        self.ffi = ffi
         #self.lib = self.ffi.dlopen(None)
         # types
         self.TYPE_STR = 99
@@ -59,7 +59,7 @@ class BasePyCodec(object):
     # len is not part of encoding because it fucks order
    
     def enc_str(self, s, itp ):
-        sc="xx"+s+"\x00"
+        sc="xx"+s
         cdata = self.ffi.new("char []",sc)
         ctype = self.ffi.new('uint8_t *',itp)
         #clen  = self.ffi.new('uint16_t *',len(s) )
@@ -99,10 +99,10 @@ class BasePyCodec(object):
         if ctype[0] == self.TYPE_UTF8:
             return ctype[0],buff[self.USRTYPESZ:-1].decode('utf-8')
         if ctype[0] == self.TYPE_LST:
-            s=  buff[-3:-1] + buff[self.USRTYPESZ:-1]
+            s= buff[self.USRTYPESZ:-1]
             return ctype[0],marshal.loads(s)
         if ctype[0] == self.TYPE_TPL:
-            s=  buff[-3:-1] + buff[self.USRTYPESZ:-1]
+            s= buff[self.USRTYPESZ:-1]
             return ctype[0],marshal.loads(s)
 
 
@@ -116,10 +116,10 @@ class BasePyCodec(object):
             return self.enc_str(data.encode('utf-8'),self.TYPE_UTF8)
         if isinstance(data, list ):
             s = marshal.dumps(data)
-            return self.enc_str( s[2:]+s[:2], self.TYPE_LST )
+            return self.enc_str( s, self.TYPE_LST )
         if isinstance(data, tuple ):
             s = marshal.dumps(data)
-            return self.enc_str( s[2:]+s[:2], self.TYPE_TPL )
+            return self.enc_str( s, self.TYPE_TPL )
        # len should be added 
        # and to inject custom comparator
        # here is the method how to do it todo http://sphia.org/ctl_db.html 

@@ -20,7 +20,7 @@ env  = Env( spapi, "/dataset/env_enco")
 
 db = DB( env, "sophia_base_test_enco")
 codec = BaseCtoPy(env.sp)
-enco = BasePyCodec(env.sp)
+enco = BasePyCodec(env.sp.ffi)
 #print "db open",db.open()
 print "env open",env.open()
 

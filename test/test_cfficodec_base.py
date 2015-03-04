@@ -9,8 +9,13 @@ class AlaBala(object):
 import sys
 sys.path.append('../cfficodecs')
 
+import cffi
 from cfficodec import  BasePyCodec 
-c = BasePyCodec()
+
+ffi = cffi.FFI()
+#ffi.dlopen()
+
+c = BasePyCodec(ffi)
 
 a = 999
 
@@ -29,6 +34,9 @@ c1 = c.encode(1111)
 c2 = c.encode(11111111111)
 c3 = c.encode(11111111111111111111111111111)
 
+print c1
+print c2
+print c3
 
 print c.decode( c1, len(c1) )
 print c.decode( c2, len(c2) )
@@ -36,6 +44,7 @@ print c.decode( c3, len(c3) )
 
 ls = c.encode ( [1,2,3] )
 lt = c.encode ( (1,11234,12341234) )
+
 print c.decode(ls,len(ls) )
 print c.decode(lt,len(lt) )
 

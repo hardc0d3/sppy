@@ -20,7 +20,7 @@ env  = Env( spapi, "/dataset/env_enco")
 
 db = DB( env, "sophia_base_test_enco")
 codec = BaseCtoPy(env.sp)
-enco = BasePyCodec(env.sp)
+enco = BasePyCodec(env.sp.ffi)
 #print "db open",db.open()
 print "env open",env.open()
 
@@ -50,6 +50,7 @@ es = e-s
 print "t:",es
 print ""
 
+'''
 sp = db.sp
 db = db.db
 o = sp.object(db)
@@ -61,7 +62,8 @@ while  o != sp.ffi.NULL:
     o = sp.get(cursor,o)
     sz = sp.ffi.new("uint32_t*")
     res_v = sp.get(o,"value",sz )
-    print enco.decode( res_v, sz[0])
+    print enco.decode( res_v.cd, sz[0])
+'''
 
 print "close env",env.close()
 
