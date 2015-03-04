@@ -1,5 +1,3 @@
-from cfficodec import BaseCtoPy
-
 
 class Env(object):
     """ sophia environment model """
@@ -29,16 +27,19 @@ class DB(object):
         self.env = sp_env
         self.ctl = sp_env.ctl
         self.sp  = sp_env.sp
-        codec = BaseCtoPy(self.env.sp)
+        self.ffi = self.sp.ffi
         self.st_db = "db"
         self.db = None
         self.opened = False
         self.st_dbname = "%s.%s" % (self.st_db,dbname) 
-        self.u32 = codec.cast_uint32_t 
         rc = self.sp.set(self.ctl,self.st_db,dbname)
-
         self.db = self.sp.get(self.ctl,self.st_dbname)
-        
+
+    def nu32( self, uint ):
+        return self.ffi.new("uint32_t*",uint)
+   
+    def cu32(self, uint):
+        return self.ffi.cast("uint32_t", uint) 
 
     def open(self):
         rc = self.sp.open(self.db)
@@ -55,11 +56,11 @@ class DB(object):
                 return True 
         return False
 
-    def _set(self, key, value, len_key, len_value ):
+    def _set_kv(self, key, value, len_key, len_value ):
        o = self.sp.object( self.db )
        # check, check, check
-       szk = self.sp.ffi.cast("uint32_t",len_key)
-       szv = self.sp.ffi.cast("uint32_t",len_value)
+       szk = self.cu32(len_key)
+       szv = self.cu32(len_value)
        if o.cd != self.sp.ffi.NULL:
            
            rc = self.sp.set(o, "key",key,szk )
@@ -76,37 +77,8 @@ class DB(object):
            return rc
 
 
-    def set_s_s(self, key, value, ):
-        return self._set(key, value, self.u32(len(key)), self.u32(len(value)) )
-
-
-    def set_u_s(self,key, value ):
-        return self._set(key,value,4,len(value) )
-
-
-    def _get_(self,codec, key):
-       o = self.sp.object( self.db )
-       sz = self.sp.ffi.new("uint32_t*")
-       # how to free this
-       if o.cd != self.sp.ffi.NULL:
-           szk = self.sp.ffi.cast("uint32_t",len(key))
-           rc = self.sp.set( o, "key",key,szk )
-           #print "get set key",rc.decode()
-
-
-           res_o = self.sp.get( self.db, o )
-
-           res_v = self.sp.get(res_o,"value",sz )
-           res_v.cd_sz = sz[0] #!
-           #check
-           #res = res_v.decode()
-           #check
-           res = codec.decode(res_v.cd,sz[0])
-           rc = self.sp.destroy( o )
-           rc = self.sp.destroy( res_o )
-           #check
-           return res
-
+    def set_s_s(self, key, value ):
+        return self._set_kv(key, value, len(key), len(value))
 
 
 
@@ -117,11 +89,7 @@ class DB(object):
        if o.cd != self.sp.ffi.NULL:
            szk = self.sp.ffi.cast("uint32_t",len_key)
            rc = self.sp.set( o, "key",key,szk )
-           #print "get set key",rc.decode()
-
-
            res_o = self.sp.get( self.db, o )
-           
            res_v = self.sp.get(res_o,"value",sz )
            res_v.cd_sz = sz[0] #!
            #check
@@ -131,10 +99,7 @@ class DB(object):
            rc = self.sp.destroy( res_o )
            #check
            return res
- 
 
-    def get_u(self, key):
-        return self._get(key,4)
     def get_s(self,key):
         return self._get(key,len(key) )
 

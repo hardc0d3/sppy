@@ -15,8 +15,6 @@ sp_dl = '../build/sp.so'
 spapi = SpApiFFI( sp_dl )
 
 
-
-
 env  = Env( spapi, "/dataset/env1")
 #print "env open",env.open()
 
@@ -26,29 +24,17 @@ codec = BaseCtoPy(env.sp)
 #print "db open",db.open()
 print "env open",env.open()
 
-u32 = codec.cast_uint32_t
-
 count = 100000
 
-print "set from 1 to %d numerical keys" % (count-1)
-s = time.time()
-for i in xrange(1,count):
-    db.set_u_s( i , "test number %d" % (i) )
-e = time.time()
-es = e - s
-print "%f",es
-print ""
-
-
 print "set from 1 to %d string keys" % (count-1)
-e = time.time()
+s = time.time()
 for i in xrange(1,count):
     key = "%d" % (i)
     val = "test string val %d" % i
     db.set_s_s( key,val )
 e = time.time()
 es = e - s
-print "%f",es
+print "t",es
 print ""
 
 print "close env",env.close()

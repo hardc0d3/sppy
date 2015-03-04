@@ -4,8 +4,8 @@ from numbers import Number
 
 
 class BaseCtoPy(object):
-    def __init__( self,sp ):
-        self.ffi = sp.ffi
+    def __init__( self,ffi ):
+        self.ffi = ffi
         self.u32 = self.cast_uint32_t
 
     def new_string( self,s ):
