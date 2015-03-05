@@ -83,10 +83,49 @@ def cursor_intkeys( sp, db, it, key, order):
         print ckey[0]
         o = sp.get( cursor, o )
 
+import marshal
+def set_marshal_key( sp, db, key ):
+    skey = marshal.dumps(key)
+    o = sp.object( db )
+    szk = sp.ffi.cast("uint32_t",len(skey))
+    rc = sp.set(o, "key",skey, szk )
+    rc = sp.set(db, o)
+    rc = sp.destroy( o )
+
+
+def cursor_marshal_keys( sp, db, key, order):
+    skey = marshal.dumps(key)
+    o = sp.object(db)
+    szk = sp.ffi.cast("uint32_t",len(skey) )
+
+    sp.set(o,"order",order)
+    sp.set(o,"key", skey, szk )
+    cursor = sp.cursor(db, o)
+    typ = sp.type(cursor)
+    print "cursor?",typ._(0)
+    sz = sp.ffi.new("uint32_t*")
+
+    o = sp.get( cursor, o )
+    while o.cd != sp.ffi.NULL:
+        rkey = sp.get(o,"key",sz)
+        mkey = marshal.loads(rkey.decode(sz[0])) 
+        print mkey 
+        o = sp.get( cursor, o )
+
 
 
 sp, env, ctl, db = open_nv()
-set_int_keys( sp, db, 10, "uint16_t")
-cursor_intkeys( sp, db,"uint16_t",5,">" )
+
+for i in xrange (1,5):
+    l = [i]*i
+    for j in xrange (1,5):
+        l[i-1]=j
+        print l
+        set_marshal_key( sp, db, l )
+#set_marshal_key( sp, db, () )
+
+cursor_marshal_keys( sp, db, [3,], ">=" )
+#set_int_keys( sp, db, 10, "uint16_t")
+#cursor_intkeys( sp, db,"uint16_t",7,">" )
 close_nv(sp, env)
  
