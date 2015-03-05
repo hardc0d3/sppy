@@ -32,7 +32,7 @@ class BaseCtoPy(object):
 
      
 
-
+'''
 class BasePyCodec(object):
 
     def __init__( self, ffi ):
@@ -124,5 +124,5 @@ class BasePyCodec(object):
        # and to inject custom comparator
        # here is the method how to do it todo http://sphia.org/ctl_db.html 
 
-
+'''
    

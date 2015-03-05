@@ -14,7 +14,7 @@ from numbers import Number
 import cffi
 import _spapi_cdef
 from _spapi import SpApi
-from cfficodec import BaseCtoPy
+#from cfficodec import BaseCtoPy
 null=None
 
 class NTMBS(object):
@@ -50,7 +50,7 @@ class CastIntCodec(object):
 
 class Wrap(object):
     """ cffi & sophia object wrapper """
-    def __init__(self, sp, codec, fun, args ):
+    def __init__(self, sp, codec,  fun, args ):
         self.sp = sp
         self.cd  = self.sp.ffi.NULL
         self.cd_sz = 0
@@ -58,7 +58,6 @@ class Wrap(object):
         self._ = self.decode
         # to support ordering
         self.cdargs = [null]*len(args)
-        self.in_codec = BaseCtoPy(self.sp)
 
 
         for argt in enumerate(args):
@@ -66,13 +65,12 @@ class Wrap(object):
                 self.cdargs[argt[0]]=argt[1].cd
             if isinstance(argt[1],sp.ffi.CData):
                 self.cdargs[argt[0]]=argt[1]
-            # only uint support 
-            if isinstance(argt[1], Number):
-                #to do: get param input codec
-                self.cdargs[argt[0]]=self.in_codec.new_uint32_t(argt[1])
+                print "cd",argt[1]
+            # use CData arg for c numerical
+            # use marshal for py numericals and other base types
+            # use picle for any objects 
             if isinstance(argt[1], str ):
                     self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) ) 
-                    pass
         if len(self.cdargs) == 0:
             self.cd = fun()
         else:
@@ -104,7 +102,6 @@ class SpApiFFI(SpApi):
 
     # codec is for returned value.decode()
     def env(self, *args):
-                   # sp,  codec,  fun,           args
         return Wrap( self, None, self.lib.sp_env, args)
 
     def ctl(self, *args ):
@@ -114,18 +111,15 @@ class SpApiFFI(SpApi):
         return Wrap(self,None, self.lib.sp_object , args )
 
     def open( self, *args):
-       #            sp    codec              fun                 args
        return Wrap(self, self.codec_castint, self.lib.sp_open,   args )
 
     def destroy( self, *args):
-       #            sp    codec               fun                  args
         return Wrap(self, self.codec_castint, self.lib.sp_destroy, args )
     
     def error( self, *args):
         return Wrap(self,  self.codec_castint, self.lib.sp_error, args )
 
     def set ( self, *args ):
-        #            sp    codec    fun             args
         return Wrap(self, self.codec_castint , self.lib.sp_set ,args )
  
     def delete(self, *args):
@@ -134,9 +128,6 @@ class SpApiFFI(SpApi):
     def get( self, *args ):
         # variable arg semantics
         if len(args) == 3 and isinstance(args[1],str):
-            # here return data, datasz
-            # should make any difference
-            #uint32_t size;
             #sp_get(object, "field", &size)
             return Wrap( self, self.codec_charlen, self.lib.sp_get, args )
         else:
