@@ -54,15 +54,15 @@ print "is obj?",typ._(0)
 #key = "the_key"
 key = sp.ffi.new("int*",10000)
 print key[0]
-value = "the_value"
-#value = sp.ffi.cast("int",34)
+#value = "the_value"
+value = sp.ffi.new("int*",99999)
 
 #szk = sp.ffi.cast("uint32_t",len(key))
-szv = sp.ffi.cast("uint32_t",len(value))
+#szv = sp.ffi.cast("uint32_t",len(value))
 print "sz key",sp.ffi.sizeof(key)
 
 szk = sp.ffi.cast("uint32_t",sp.ffi.sizeof(key) )
-#szv = sp.ffi.cast("uint32_t",sp.ffi.sizeof(value) )
+szv = sp.ffi.cast("uint32_t",sp.ffi.sizeof(value) )
 print szk,szv
 
 rc = sp.set( o, "key",key,szk )
@@ -102,8 +102,8 @@ sz = sp.ffi.new("uint32_t*")
 
 res_v = sp.get(o,"value",sz )
 
-print "value: ", res_v.decode(sz[0])
-
+#print "value: ", res_v.decode(sz[0])
+print "value", sp.ffi.cast("int*",res_v.cd)[0]
 
 sp.destroy(o)
 
