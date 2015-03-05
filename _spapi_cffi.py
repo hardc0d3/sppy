@@ -65,7 +65,7 @@ class Wrap(object):
                 self.cdargs[argt[0]]=argt[1].cd
             if isinstance(argt[1],sp.ffi.CData):
                 self.cdargs[argt[0]]=argt[1]
-                print "cd",argt[1]
+                #print "cd",argt[1]
             # use CData arg for c numerical
             # use marshal for py numericals and other base types
             # use picle for any objects 
