@@ -2,7 +2,8 @@
 sphia.org v1.2 python cffi binding 
 
 
-* example usage:
+example usage:
+
     from _spapi_cffi import SpApiFFI
     sp_dl = '../build/sp.so'
     sp = SpApiFFI( sp_dl )
