@@ -35,7 +35,6 @@ class CharLen(object):
          return self.ffi.buffer( self.ffi.cast ("char*",nts ),sz )[:]
 
 
-
 class CastIntCodec(object):
      def __init__(self,ffi):
          self.ffi = ffi
@@ -45,7 +44,6 @@ class CastIntCodec(object):
 
      def encode( self, i):
          return self.ffi.cast("int",i)
-
 
 
 class Wrap(object):
@@ -81,7 +79,6 @@ class Wrap(object):
         if self.codec is None or self.cd == self.sp.ffi.NULL: 
             return None
         return self.codec.decode ( self.cd, sz )
-
 
 
 
