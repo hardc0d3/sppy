@@ -129,12 +129,8 @@ for item in data_list:
     print item
     set_marshal_key( sp, db, item )
 
-#set_marshal_key( sp, db, () )
-
 
 
 cursor_marshal_keys( sp, db, [2,], ">=" )
-#set_int_keys( sp, db, 10, "uint16_t")
-#cursor_intkeys( sp, db,"uint16_t",7,">" )
 close_nv(sp, env)
  
