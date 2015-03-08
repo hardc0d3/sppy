@@ -40,20 +40,3 @@ print_pointer ( char* pointer, size_t psz, void* func) {
 
 
 
-int main()
-{
-char a[] = "xxabc";
-char b[] = "xxabcd";
-size_t offset = 2; 
-int r = compare_function( a, sizeof(a), b, sizeof(b), (void*)&offset );
-
-
-
-
-
-
-
-printf("result %d \n",r);
-
-return 0;
-}
