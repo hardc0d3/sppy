@@ -3,7 +3,7 @@ sys.path.append('../')
 sys.path.append('../compare_fun')
 
 
-def open_nv():
+def set_nv():
 
     import _spapi_cdef
     from _spapi_cffi import SpApiFFI
@@ -25,29 +25,16 @@ def open_nv():
     rc = sp.set( ctl, "sophia.path", "../test_data/" )
     print "set ctl path", rc.decode(0)
 
-
-    import cffi
-    import cmpdef 
-    ffi = cffi.FFI()
-    ffi.cdef( cmpdef.cdef )
-    lib = ffi.dlopen("../compare_fun/cmp.so" )
-    compare_fun  = ffi.new("char[64]")
-    compare_fun_arg = ffi.new("char[64]")
-
-    rcc = lib.print_pointer( compare_fun, ffi.cast("size_t",64) , lib.compare_function ) 
-    # offset is 1 because of type byte in marshal
-    offset = 0 
-    rcc = lib.print_pointer( compare_fun_arg, ffi.cast("size_t",64) , ffi.new("size_t*",offset) )
-    # sp_set(ctl, "db.name.index.cmp", pointer_fun, pointer_arg);
-
     
     rc = sp.set( ctl, "db", "spwrap" )
     print "set ctl db name",rc
+    
+    return sp, env, ctl
+
+def open_nvdb(sp, env, ctl):
+
     db = sp.get( ctl, "db.spwrap" )
 
-
-    rc = sp.set(ctl, "db.spwrap.index.cmp", compare_fun, compare_fun_arg )
-    print "custom cmp",rc._(0)
 
     print "db cd",db.cd
     typ = sp.type(db)
@@ -58,7 +45,27 @@ def open_nv():
     rc = sp.open( env )
     print "open env",rc._(0)
 
-    return sp,env,ctl,db
+    return db
+
+
+def set_custom_comparsion(sp, ctl):
+    import cffi
+    import cmpdef
+    ffi = cffi.FFI()
+    ffi.cdef( cmpdef.cdef )
+    lib = ffi.dlopen("../compare_fun/cmp.so" )
+    compare_fun  = ffi.new("char[64]")
+    compare_fun_arg = ffi.new("char[64]")
+
+    rcc = lib.print_pointer( compare_fun, ffi.cast("size_t",64) , lib.compare_str )
+    print "print pointer",rcc
+    offset = 0
+    rcc = lib.print_pointer( compare_fun_arg, ffi.cast("size_t",64) , ffi.new("size_t*",offset) )
+    # sp_set(ctl, "db.name.index.cmp", pointer_fun, pointer_arg);
+  # set custom comparsion
+    rc = sp.set(ctl, "db.spwrap.index.cmp", compare_fun, compare_fun_arg )
+    print "set custom cmp",rc._(0)
+
 
 
 
@@ -81,7 +88,70 @@ def set_int_keys (sp, db, count, int_type):
         if rc._(0) != 0:
             print "err in set key in db"
     #rc = sp.destroy( o )
-    print "OK" 
+    print "OK"
+
+def set_str_key(sp, db, strkey ):
+    o = sp.object(db)
+    szk = sp.ffi.cast("uint32_t", len(strkey) )
+    rc = sp.set(o, "key", strkey, szk )
+    # check
+    if rc._(0) != 0: print "err set key object"
+    rcd = sp.set(db, o)
+    if rcd._(0) != 0: print "err set key in db"
+
+def get_str_key(sp, db, strkey ):
+    o = sp.object(db)
+    szk = sp.ffi.cast("uint32_t", len(strkey) )
+    rc = sp.set(o, "key", strkey, szk )
+    # check
+    if rc._(0) != 0: print "in get err set key object"
+    ret_o = sp.get(db, o)
+    if ret_o.cd == sp.ffi.NULL: print "err get key from db"
+    sz = sp.ffi.new("uint32_t*")
+    ret_key = sp.get(ret_o,"key",sz )
+    print "get key ->",ret_key.decode(sz[0])
+    rc = sp.destroy(ret_o)
+
+
+def cursor_strkeys_all(sp,db):
+    o = sp.object(db)
+    #szk = sp.ffi.cast("uint32_t",len(strkey) )
+    #sp.set(o,"order",order)
+   # sp.set(o,"key", strkey, szk )
+    cursor = sp.cursor(db, o)
+    typ = sp.type(cursor)
+    print "cursor?",typ._(0)
+    sz = sp.ffi.new("uint32_t*")
+
+    o = sp.get( cursor, o )
+    while o.cd != sp.ffi.NULL:
+        key = sp.get(o,"key",sz)
+        #ckey = sp.ffi.cast(itp,key.cd)
+        print sz[0],"key -> ",key.decode(sz[0])
+        o = sp.get( cursor, o )
+
+
+
+
+def cursor_strkeys(sp, db, strkey, order):
+    o = sp.object(db)
+    szk = sp.ffi.cast("uint32_t",len(strkey) )
+    sp.set(o,"order",order)
+    sp.set(o,"key", strkey, szk )
+    cursor = sp.cursor(db, o)
+    typ = sp.type(cursor)
+    print "cursor?",typ._(0)
+    sz = sp.ffi.new("uint32_t*")
+
+    o = sp.get( cursor, o )
+    while o.cd != sp.ffi.NULL:
+        key = sp.get(o,"key",sz)
+        #ckey = sp.ffi.cast(itp,key.cd)
+        print "key -> ",key.prefix(sz[0],strkey)
+        
+        o = sp.get( cursor, o )
+
+ 
          
 def cursor_intkeys( sp, db, it, key, order):
     o = sp.object(db)
@@ -154,27 +224,33 @@ def cursor_marshal_keys_all( sp, db, order):
 
 
 
-sp, env, ctl, db = open_nv()
+sp, env, ctl  = set_nv()
+set_custom_comparsion(sp, ctl)
+db = open_nvdb(sp, env, ctl)
 
 
 data_list = [
-
-[1,],[1,1],[1,1,3],[1,1,5],
-[2,1],[2,1,1],[2,2],
-[3,],[3,1,1],[3,2]
-
+"az","azimut","aston","advert","abby",
+"hot","hobby","hobbit","homo",
+"sapiens","erectus",
+"sciense","hacking","hack"
 ]
 
 
 for item in data_list:
-    print item
-    set_marshal_key( sp, db, item )
+    print "set in: ",item
+    set_str_key( sp, db, item )
 
-#set_marshal_key( sp, db, () )
+for item in data_list:
+    print "get from: ",item
+    get_str_key(sp,db, item )
 
-cursor_marshal_keys_all(sp,db,"<")
-##cursor_marshal_keys( sp, db, [0,], ">" )
-#set_int_keys( sp, db, 10, "uint16_t")
-#cursor_intkeys( sp, db,"uint16_t",7,">" )
+# prefix cursor
+try:
+    cursor_strkeys(sp,db,"a",">=")
+except StopIteration:
+    print "all prefixes done"
+
+
 close_nv(sp, env)
  

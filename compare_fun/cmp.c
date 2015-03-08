@@ -1,34 +1,34 @@
 #include<stdio.h>
+#include<string.h>
+
+
+#define srlikely(EXPR)   __builtin_expect(!! (EXPR), 1)
+#define srunlikely(EXPR) __builtin_expect(!! (EXPR), 0)
 
 
 extern int
 compare_function(char *a, size_t asz, char *b, size_t bsz, void *arg)
 {
-	/* compare */
-	/* return -1, 0, 1 */ /*? a<b -1 a=b 1 a>b 1*/
-size_t a_idx, b_idx;
-//int ret = 0;
-size_t* start_idx =(size_t *)arg ;
-a_idx = *start_idx;
-b_idx = *start_idx;
-
-   while ( a_idx < asz && b_idx < bsz ) {
-      
-      //printf("a_idx:%d b_idx%d  | %c %c  \n",a_idx,b_idx, (char)a[a_idx],(char) b[b_idx]); 
-      if (a[a_idx] < b[b_idx]) { return -1; }
-      else if (a[a_idx] > b[b_idx]) { return 1; }
-      
-      a_idx++;
-      b_idx++;
-
-   }
-  if (  bsz > asz ) { return -1; }
-  else if(  bsz < asz) { return 1; }
-  else { return 0; }
-
-  return 0;
+   return 0;
 }
 
+/* mot mo copy pasted from
+sophia/sophia/rt/sr_cmp.c
+*/
+
+extern int 
+compare_str(char *a, size_t asz, char *b, size_t bsz, void *arg)
+{
+        register int size = (asz < bsz) ? asz : bsz;
+
+        register int rc = memcmp(a, b, size);
+        if (srunlikely(rc == 0)) {
+                if (srlikely(asz == bsz))
+                        return 0;
+                return (asz < bsz) ? -1 : 1;
+        }
+        return rc > 0 ? 1 : -1;
+}  
 
 
 extern int 

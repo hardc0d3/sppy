@@ -33,7 +33,16 @@ class CharLen(object):
 
      def decode( self,nts, sz ):
          return self.ffi.buffer( self.ffi.cast ("char*",nts ),sz )[:]
-
+  
+     def decode_prefix(self, nts, sz, prefix ):
+         buf = self.ffi.buffer( self.ffi.cast ("char*",nts ),sz )
+         lprefix = len(prefix)
+         if lprefix > sz:
+             lprefix = sz 
+         for i in xrange( lprefix ):
+             if buf[i] != prefix[i]:
+                 raise StopIteration
+         return buf[:] 
 
 class CastIntCodec(object):
      def __init__(self,ffi):
@@ -80,6 +89,10 @@ class Wrap(object):
             return None
         return self.codec.decode ( self.cd, sz )
 
+    def prefix(self,sz,prefix):
+        if self.codec is None or self.cd == self.sp.ffi.NULL:
+           return None
+        return self.codec.decode_prefix ( self.cd, sz, prefix)
 
 
 class SpApiFFI(SpApi):
