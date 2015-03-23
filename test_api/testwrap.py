@@ -8,9 +8,9 @@ def open_nv():
     import _spapi_cdef
     from _spapi_cffi import SpApiFFI
     from _spapi_cffi import Wrap
+    import config
 
-    sp_dl = '../build/sp.so'
-    sp = SpApiFFI( sp_dl )
+    sp = SpApiFFI( config.spdl )
 
     env = sp.env()
     print "env:",env.cd

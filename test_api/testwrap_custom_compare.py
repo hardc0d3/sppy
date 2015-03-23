@@ -1,4 +1,5 @@
 import sys
+import config
 sys.path.append('../')
 sys.path.append('../compare_fun')
 
@@ -9,8 +10,7 @@ def set_nv():
     from _spapi_cffi import SpApiFFI
     from _spapi_cffi import Wrap
 
-    sp_dl = '../build/sp.so'
-    sp = SpApiFFI( sp_dl )
+    sp = SpApiFFI( config.spdl )
 
     env = sp.env()
     print "env:",env.cd
@@ -53,7 +53,7 @@ def set_custom_comparsion(sp, ctl):
     import cmpdef
     ffi = cffi.FFI()
     ffi.cdef( cmpdef.cdef )
-    lib = ffi.dlopen("../compare_fun/cmp.so" )
+    lib = ffi.dlopen(config.cmpdl)
     compare_fun  = ffi.new("char[64]")
     compare_fun_arg = ffi.new("char[64]")
 
