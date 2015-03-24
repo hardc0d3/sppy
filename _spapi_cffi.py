@@ -77,7 +77,9 @@ class Wrap(object):
             # use marshal for py numericals and other base types
             # use picle for any objects 
             if isinstance(argt[1], str ):
-                    self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) ) 
+                    self.cdargs[ argt[0]] = ( NTMBS( sp.ffi ).encode( argt[1] ) )
+                    #print "!!!>>> sp wrap string len",argt[1],len(argt[1])
+                    #print "!!!>>> sp str cd      len", (self.cdargs[ argt[0]]) 
         if len(self.cdargs) == 0:
             self.cd = fun()
         else:
@@ -87,6 +89,7 @@ class Wrap(object):
     def decode(self,sz):
         if self.codec is None or self.cd == self.sp.ffi.NULL: 
             return None
+        #print "?####SZ ondecode",sz
         return self.codec.decode ( self.cd, sz )
 
     def prefix(self,sz,prefix):
