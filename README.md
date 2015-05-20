@@ -4,9 +4,11 @@ sphia.org v1.2 python cffi binding
 
 example usage:
 
-    from _spapi_cffi import SpApiFFI
+    from sppy import SophiaApi
+    from sppy from sppy import sophia_api_cdef
+
     sp_dl = '../build/sp.so'
-    sp = SpApiFFI( sp_dl )
+    sp = SophiaApi( sp_dl, sophia_api_cdef )
 
     # env, ctl are wrap object
 
@@ -28,10 +30,8 @@ example usage:
     val = sp.get(o,"value",sz)
 
 
-* Wrap object have decode method, in case of "rc" with resulting integer decoder don't need data len. Decode is used when returned object is not handle like env, ctl, object, cursor
-* As api function arguments, there are 3 type variants, Wrap that carry sophia handle, python str which is encoded to char* or cffi cdata. 
-* test_api/test_wrap.py is example how to use cffi api wrapper
-* for detailed sophia api docs, http://sphia.org/documentation.html 
-* Currently lack of high level abstraction, and need help with more test cases to cover the api.
+* Wrap object have decode method, when api function resulting integer decoder don't need data len. Decode is used when returned object is data but not handle like env, ctl, object, cursor.
+* Currently api function arguments recieve 3 type variants, Wrap object that carry sophia handle types or cffi cdata, python str which is encoded to cffi cdata char*
+* for detailed sophia api docs,please check with http://sphia.org/documentation.html 
 
 
