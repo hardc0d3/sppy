@@ -2,7 +2,7 @@ from sppy.spapi_cffi import SophiaApi
 from sppy.spapi_cffi_cdef import sophia_api_cdef
 from sppy.spapi_cffi_codecs import *
 from sppy.spapi_dict import SophiaDict
-
+from sppy.spapi_cursor_dict import SophiaCursorDict
 dbname = 'test'
 sp = SophiaApi( '../../sophia/libsophia.so.1.2.1',sophia_api_cdef )
 codec_u32 = U32(sp.ffi)
@@ -42,6 +42,7 @@ print "db type",typ._(0)
 
 dict_db =  SophiaDict(dict_db_config,db)
 
+
 print "set vals"
 for i in xrange(0,keycount):
     dict_db[i]=1000+i
@@ -50,35 +51,36 @@ print "get vals"
 for i in xrange(0,keycount):
     print dict_db[i]
 
-print "change vals"
-for i in xrange(0,keycount):
-    dict_db[i]=i+100
 
-print "get vals"
-for i in xrange(0,keycount):
-    print dict_db[i]
 
-print "del keys"
-for i in xrange(0,keycount):
-    del dict_db[i]
+SC = SophiaCursorDict
 
-print "set key only"
-for i in xrange(0,keycount):
-    dict_db[i]=None
+c1,c2,c3,c4 = SC(dict_db), SC(dict_db), SC(dict_db), SC(dict_db)
+c1[3]="<"
+c2[3]="<="
+c3[3]=">"
+c4[3]=">=" 
 
-print "get vals"
-for i in xrange(0,keycount):
-    print dict_db[i]
+print "test iter"
 
-print "set vals"
-for i in xrange(0,keycount):
-    dict_db[i]=10000+1
+print c1.key,c1.order, [ x for x in c1 ]
+print c2.key,c2.order, [ x for x in c2 ]
+print c3.key,c3.order, [ x for x in c3 ]
+print c4.key,c4.order, [ x for x in c4 ]
 
-rc = sp.destroy(db)
-print "destroy db",rc._(0)
+print "reset cursors"
 
-rc = sp.destroy(env)
-print "destroy env",rc._(0)
+c1.reset()
+c2.reset()
+c3.reset()
+c4.reset()
+
+print "test iteritems"
+
+print c1.key,c1.order, [ x for x in c1.iteritems() ]
+print c2.key,c2.order, [ x for x in c2.iteritems() ]
+print c3.key,c3.order, [ x for x in c3.iteritems() ]
+print c4.key,c4.order, [ x for x in c4.iteritems() ]
 
 
 

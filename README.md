@@ -7,10 +7,10 @@ status: work in progress,but with very basic:
 * lack of documentation
 * lack of packaging
 
-notes:
+however:
 * python,c data conversion is done vith codecs using cffi
 * please see sppy_test as example how to use low level api wrapper
-* and sppy_dict_test as example for dict interface wrapper
+* sppy_dict_test as example for dict interface wrapper and dict cursor iterator over db
 
 
 to do:
