@@ -61,18 +61,20 @@ c2[3]="<="
 c3[3]=">"
 c4[3]=">=" 
 
-print "test iterator"
+print "test stepper"
 
-stepper = CurrentStep(iter(c1))
-print stepper.cnt,stepper.current()
+s1 = CurrentStep(iter(c2))
+print "s1",s1.cnt, s1.current()
 while True:
    try:
-       stepper.step()
-       print stepper.cnt, stepper.current()
+       s1.step()
+       print "s1",s1.cnt, s1.current()
    except StopIteration, e:
        break
        
- 
+c2.reset()
+
+print [ x for x in c2 ] 
 
 
 
