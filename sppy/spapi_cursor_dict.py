@@ -1,5 +1,22 @@
 #__getitem__(), __setitem__(), __delitem__(), and keys().
 
+class CurrentStep(object):
+    def __init__(self,iterator):
+        self.it = iterator
+        self.cnt = 0
+        self.curr = None
+        
+        self.curr = self.it.next()
+        # will raise StopIteration if there is not at least one item 
+        #self.cnt +=1
+
+    def step(self):
+        self.curr = self.it.next()
+        self.cnt +=1
+
+    def current(self):
+        return self.curr
+            
 
 class SophiaCursorDict(object):
 
@@ -16,6 +33,8 @@ class SophiaCursorDict(object):
         self.o = self.sp.ffi.NULL
         self.order = None
         self.key =  None
+        self.current_key = None
+        self.current_val = None
 
     def __setitem__(self,key,order):
         """ set cursor search key in order | order could be some of that strings: > < <= >= """
