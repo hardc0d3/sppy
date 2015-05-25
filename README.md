@@ -14,7 +14,6 @@ however:
 
 
 to do:
-* impl for cursor functionality as generators and high level cursor interfaces
 * improve err handling
 * abstract environment ctl and db collections
 * better unit tests
