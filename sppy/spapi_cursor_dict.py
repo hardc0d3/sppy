@@ -1,24 +1,5 @@
-#__getitem__(), __setitem__(), __delitem__(), and keys().
-
-class CurrentStep(object):
-    def __init__(self,iterator):
-        self.it = iterator
-        self.cnt = 0
-        self.curr = None
-        
-        self.curr = self.it.next()
-        # will raise StopIteration if there is not at least one item 
-        #self.cnt +=1
-
-    def step(self):
-        self.curr = self.it.next()
-        self.cnt +=1
-
-    def current(self):
-        return self.curr
-            
-
 class SophiaCursorDict(object):
+    """ cursor dict wrapper c[query_key]=order, eg c[4]='<=' """
 
     def __init__(self,db_dict):
         self.db = db_dict.db 
