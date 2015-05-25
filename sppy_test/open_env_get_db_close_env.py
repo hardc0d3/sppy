@@ -1,9 +1,10 @@
 from sppy.spapi_cffi import SophiaApi
-from sppy.spapi_cffi_cdef import sophia_api_cdef 
+from sppy.spapi_cffi_cdef import sophia_api_cdefs 
 from sppy.spapi_cffi_codecs import *
 
 dbname = 'test'
-sp = SophiaApi( '../../sophia/libsophia.so.1.2.1',sophia_api_cdef )
+sp = SophiaApi( '../../sophia/sophia1.2.2/libsophia.so.1.2.2',sophia_api_cdefs['1.2.2'] )
+
 
 codec_u32 = U32(sp.ffi)
 
