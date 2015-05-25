@@ -23,7 +23,6 @@ class SophiaDict(object):
         rcd = self.sp.set(self.db, o)
         if rcd._(0) != 0:
             raise KeyError('unable to set key only object in db')
-        #return rcd._(0)
 
 
     def _setkeyval(self,key,val):
@@ -54,10 +53,16 @@ class SophiaDict(object):
         if rc._(0) != 0:
             raise KeyError('unable to set key field in object')
         ret_o = self.sp.get(self.db, o)
+ 
         if ret_o.cd == self.sp.ffi.NULL:
              raise KeyError('unable to get key object from db')
         sz = self.sp.ffi.new("uint32_t*")
+              
         ret_val = self.sp.get(ret_o,"value",sz )
+         
+        if ret_val.cd == self.sp.ffi.NULL:
+             raise Exception (" NULL" )
+
         ret_dec = self.val_codec.decode(ret_val.cd,sz[0])
         rc = self.sp.destroy(ret_o)
         if rc._(0) != 0:
@@ -81,16 +86,8 @@ class SophiaDict(object):
             raise KeyError('unbale to set key field in object')
 
         rc = self.sp.delete(self.db,o)
-        if rc._(0) !=0:
-            rcd = self.sp.destroy(o)
-            if rcd._(0) != 0:
-                raise KeyError('unable to del key and destroy obj')
-            raise KeyError('unable to del key')
-
-        rcd = self.sp.destroy(o)
-        if rcd._(0) != 0:
-            raise KeyError('unable to destroy obj after del')
-        #return rc.cd[0]
+        if rc._(0) != 0:
+            raise KeyError('unable to delete key') 
 
 
         

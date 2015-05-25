@@ -1,13 +1,8 @@
 '''
-spapi_cffi
 python cffi based wrapper for SophiaDB, sphia.org
-
-Copyright (c) Dobri Stoilov hardc0d3
-BSD License
 '''
 
 import cffi
-#from spapi_cffi_cdef import spapi_cdef
 null=None
 
 
@@ -92,7 +87,7 @@ class Wrap(object):
 
 
 class SophiaApi(object):
-    """ sophia database api wrapper based on cffi """
+    """ sophia database api v1.2.2 wrapper based on cffi """
 
     def __init__( self, dl, cdef ):
         self.ffi = cffi.FFI() 
@@ -153,5 +148,7 @@ class SophiaApi(object):
 
     def type( self, *args):
         return Wrap(self,self.codec_ntmbs, self.lib.sp_type, args)
-
+#v1.2.2
+    def async(self, *args):
+        return Wrap(self, None , self.lib.sp_async ,args )
 

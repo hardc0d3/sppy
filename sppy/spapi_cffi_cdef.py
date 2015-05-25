@@ -1,17 +1,10 @@
+#c def Copyright (C) Dmitry Simonenko (pmwkaa@gmail.com)
 
-sophia_api_cdef = """
-
-/*
- * sophia database API v1.2
- * sphia.org
- *
- * C API Copyright (c) Dmitry Simonenko
- * BSD License
- */
-
-
+sophia_api_cdefs = {
+'1.2.2':"""
 void *sp_env(void);
 void *sp_ctl(void*, ...);
+void *sp_async(void*, ...);
 void *sp_object(void*, ...);
 int   sp_open(void*, ...);
 int   sp_destroy(void*, ...);
@@ -26,5 +19,4 @@ int   sp_commit(void*, ...);
 void *sp_cursor(void*, ...);
 void *sp_type(void*, ...);
 """
-
-
+}

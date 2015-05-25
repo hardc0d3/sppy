@@ -10,11 +10,8 @@ __pycache__/
 env/
 build/
 develop-eggs/
-test_data/
+test_data*/
 
-# Test DATA
-
-test_data/
 
 # vim
 *.swp

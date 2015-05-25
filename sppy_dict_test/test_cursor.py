@@ -1,18 +1,16 @@
 from sppy.spapi_cffi import SophiaApi
-from sppy.spapi_cffi_cdef import sophia_api_cdef
 from sppy.spapi_cffi_codecs import *
 from sppy.spapi_dict import SophiaDict
 from sppy.spapi_cursor_dict import SophiaCursorDict
-dbname = 'test'
-sp = SophiaApi( '../../sophia/libsophia.so.1.2.1',sophia_api_cdef )
-codec_u32 = U32(sp.ffi)
-dict_db_config = {
-'sp.api':sp
-,'key.codec':codec_u32
-,'value.codec':codec_u32
-}
+import config1_2_2 as conf
 
-keycount = 10
+dbname = conf.default_db_name
+sp = conf.sp
+codec_u32 = conf.codec_u32
+dict_db_config = conf.dict_db_default_config
+keycount = conf.keycount
+
+
 
 env = sp.env()
 print "get env object",env.cd
@@ -24,7 +22,7 @@ ctl = sp.ctl(env)
 typ = sp.type(ctl)
 print "type of ctl?",typ.decode(0)
 
-rc = sp.set( ctl, "sophia.path", "../test_data" )
+rc = sp.set( ctl, "sophia.path", conf.default_sp_path )
 print "set ctl path", rc.decode(0)
 
 
