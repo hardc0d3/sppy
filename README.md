@@ -1,37 +1,25 @@
 # sppy
-sphia.org v1.2 python cffi binding 
+sphia.org v1.2 cffi python binding 
+
+status: work in progress,but with very basic:
+* low level api wrapper functionallity
+* high level abstraction and test units 
+* lack of documentation
+* lack of packaging
+
+notes:
+* python,c data conversion is done vith codecs using cffi
+* please see sppy_test as example how to use low level api wrapper
+* and sppy_dict_test as example for dict interface wrapper
 
 
-example usage:
-
-    from sppy import SophiaApi
-    from sppy from sppy import sophia_api_cdef
-
-    sp_dl = '../build/sp.so'
-    sp = SophiaApi( sp_dl, sophia_api_cdef )
-
-    # env, ctl are wrap object
-
-    env = sp.env()
-    ctl = sp.ctl(env)
-    rc = sp.set( ctl, "sophia.path", "../test_data/" )
-    rc = sp.set( ctl, "db", "spwrap" )
-    print rc.decode(0)
-    # or 
-    print rc._(0)
-    db = sp.get( ctl, "db.spwrap" )
-    rc = sp.open( env )
-    skey = marshal.dumps(key)
-    o = sp.object( db )
-    szk = sp.ffi.cast("uint32_t",len(skey))
-    rc = sp.set(o, "key",skey, szk )
-    rc = sp.set(db, o)
-    #. . . 
-    val = sp.get(o,"value",sz)
-
-
-* Wrap object have decode method, when api function resulting integer decoder don't need data len. Decode is used when returned object is data but not handle like env, ctl, object, cursor.
-* Currently api function arguments recieve 3 type variants, Wrap object that carry sophia handle types or cffi cdata, python str which is encoded to cffi cdata char*
-* for detailed sophia api docs,please check with http://sphia.org/documentation.html 
-
+to do:
+* impl for cursor functionality as generators and high level cursor interfaces
+* improve err handling
+* abstract environment ctl and db collections
+* better unit tests
+* abstract and add/test features from sophia 1.3
+* impl additional codecs, to support python types 
+* publish docs
+* python packaging
 

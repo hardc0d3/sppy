@@ -2,7 +2,7 @@
 sophia_api_cdef = """
 
 /*
- * sophia database API
+ * sophia database API v1.2
  * sphia.org
  *
  * C API Copyright (c) Dmitry Simonenko
