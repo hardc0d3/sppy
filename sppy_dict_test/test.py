@@ -24,7 +24,7 @@ ctl = sp.ctl(env)
 typ = sp.type(ctl)
 print "type of ctl?",typ.decode(0)
 
-rc = sp.set( ctl, "sophia.path", "../test_data/" )
+rc = sp.set( ctl, "sophia.path", "../test_data" )
 print "set ctl path", rc.decode(0)
 
 
