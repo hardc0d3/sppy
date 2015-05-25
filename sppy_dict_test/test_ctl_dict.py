@@ -45,7 +45,7 @@ for ctl_k, ctl_v in ctl_dict.iteritems():
 print "--- test iter keys----"
 
 for ctl_key in ctl_dict:
-    print ctl_key,ctl_dict[ctl_key] 
+    print ctl_key
 
 
 rc = sp.destroy( env )
