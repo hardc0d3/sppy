@@ -1,4 +1,4 @@
-Copyright ( c ) 2015, Dobri Stoilov ( hardc0d3 ) and company: "Edu Consult 2010 - ltd" in bulgarian: "ЕДУ КОНСУЛТ 2010 - ООД" with legal registration in Bulgaria.
+Copyright ( c ) 2015, Dobri Stoilov ( hardc0d3 ).
 
 Redistribution and use in source and binary forms, with or
 without modification, are permitted provided that the following
