@@ -1,0 +1,13 @@
+language: python
+python:
+  - "2.7"
+  - "pypy"
+# command to install dependencies
+install:
+  - pip install .
+  - pip install -r requirements.txt
+# command to run tests
+script:
+  - sppy_unit_test/dict/single_db_u32_run.py
+
+
