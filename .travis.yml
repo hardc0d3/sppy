@@ -8,6 +8,7 @@ install:
   - cd lib/sophia
   - git checkout v1.2.2
   - make
+  - cd ../../
 # command to run tests
 script:
   - cd sppy_unit_test/dict/
