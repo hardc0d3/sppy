@@ -29,11 +29,18 @@ print "set ctl path", rc.decode(0)
 rc = sp.set( ctl, "db", dbname )
 print "set ctl db name:%s"%dbname,rc
 
+
+rc = sp.set( ctl, "db.%s.index.cmp", "u32" )
+
+
 rc = sp.open( env )
 print "open env",rc._(0)
 
 db = sp.get( ctl, "db.%s"%dbname )
 print "get ctl db.%s"%dbname,db.cd
+
+
+
 
 typ = sp.type(db)
 print "db type",typ._(0)
