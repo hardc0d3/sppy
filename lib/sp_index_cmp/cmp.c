@@ -43,21 +43,21 @@ register int i;
 a+=4;
 b+=4;
 
-for ( i =4; i<bufsz; i+=4 ) {
+for ( i = 4; i<bufsz; i+=4 ) {
 
      ua = *(uint32_t*) a;
      ub = *(uint32_t*) b;
 
        if( ua < ub) { return -1; }
        else if ( ua > ub ) { return 1; }
-       else { return 0; }
+       //else { return 0; }
        a+=4;
        b+=4;
        
   }
-
+  printf ("asz %d bsz %d bufsz %d", asz,bsz,bufsz );
   if( asz < bsz ) { return -1;}
-  else if ( bsz > asz ) { return 1; }
+  else if ( asz > bsz ) { return 1; }
   else { return 0; }
 
   return 0;
