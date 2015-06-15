@@ -1,6 +1,7 @@
 import cffi
 import sp_index_cmp.cmpdef as cmpdef
 from sppy.spapi_cffi_codecs import ListU32
+from random import randint
 
 ffi = cffi.FFI()
 ffi.cdef ( cmpdef.cdef )
@@ -12,15 +13,17 @@ def pycmp( a,b ):
    elif a>b: return 1
    else: return 0
 
+cases = []
+case_count = 100000
 
-cases = [
-[[3,2],[3,2,1]],
-[[3,2,1],[3,2]],
-[[3,2,2],[3,2,2]],
-[[3,2,1],[3,4,1]],
-[[3,4,1],[3,2,1]],
-[[3,4],[3,2,1,2]],
-]
+for i in xrange(1,case_count):
+    ll1 = list([])
+    ll2 = list([])
+    for k in xrange(1,randint(1,10)):
+        ll1.append( randint(1,100000))
+    for k in xrange(1,randint(1,10)):
+        ll2.append(randint(1,100000))
+    cases.append([ll1,ll2])
 
 codec =  ListU32(ffi)
 

@@ -55,7 +55,6 @@ for ( i = 4; i<bufsz; i+=4 ) {
        b+=4;
        
   }
-  printf ("asz %d bsz %d bufsz %d", asz,bsz,bufsz );
   if( asz < bsz ) { return -1;}
   else if ( asz > bsz ) { return 1; }
   else { return 0; }
