@@ -35,7 +35,7 @@ extern int
 compare_u32list(char *a, size_t asz, char *b, size_t bsz, void *arg)
 {
 
-register int bufsz  = ( asz < bsz ) ? asz : bsz;
+register size_t bufsz  = ( asz < bsz ) ? asz : bsz;
 register uint32_t ua;
 register uint32_t ub;
 register int i;
@@ -47,7 +47,7 @@ for ( i = 4; i<bufsz; i+=4 ) {
 
      ua = *(uint32_t*) a;
      ub = *(uint32_t*) b;
-
+     //printf("ua %"PRIu32"  ub%"PRIu32" %d\n",ua,ub,i);
        if( ua < ub) { return -1; }
        else if ( ua > ub ) { return 1; }
        //else { return 0; }
