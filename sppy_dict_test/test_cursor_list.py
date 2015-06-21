@@ -87,25 +87,18 @@ for k in keys:
 
 
 
-'''
-print "set vals"
-for i in xrange(0,keycount):
-    l = list()
-    for k in xrange(1,randint(1,5)):
-        l.append( randint(1,10000))
-        
-    dict_db[ l ]=i
-'''
-
-
 
 
 
 c= SophiaCursorDict(dict_db)
-c[[0]]=">="
 
 
-for item in c:
-   print item
+def qry(query_list,ords): 
+    global c
+    c[query_list]=ords
+    c.reset()
+
+    for item in c:
+        print item
 
 
