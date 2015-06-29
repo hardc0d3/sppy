@@ -86,6 +86,36 @@ class Wrap(object):
         return self.codec.decode_prefix ( self.cd, sz, prefix)
 
 
+class SophiaCmpApi(object):
+    """ sophia database custom comparsion api wrap with cffi 
+        init with dl_name,cdef str, platform bits 32 or 64 and function name"
+        then use self.compare_function to set in sophia control interface,
+        currently compare_args are not used ( NULL pointer passed )
+        sp.set( ctl, "db.%s.index.cmp"%dbname,  this.compare_func, this.compare_args)
+    """
+
+    def __init__( self, dl, cdef, platform_bits, func_name ):
+        """ dl file name, cdef string, platform_bits: int 32 or 64, func_name string """
+        self.platform_bits = platform_bits
+        self.ffi = cffi.FFI()
+        self.f = self.ffi
+        self.cdef = cdef
+        self.f.cdef( self.cdef )
+        self.lib = self.f.dlopen( dl )
+        self.null = self.f.NULL
+        self.func_name = func_name
+
+        self.compare_func = self.f.new("char[%d]"%self.platform_bits)
+        self.func_cffi_code = getattr(self.lib,self.func_name)
+        self.compare_args = self.null
+        rc = self.lib.print_pointer( self.compare_func, self.ffi.cast("size_t",self.platform_bits) , self.func_cffi_code)
+        if rc <0:
+            raise Exception, e("error printing pointer with function code")
+        elif rc == 0:
+            raise Exception, e("error printing pointer, zero bytes printed, pointer may be NULL")
+
+
+
 class SophiaApi(object):
     """ sophia database api v1.2.2 wrapper based on cffi """
 
