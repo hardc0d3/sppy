@@ -110,9 +110,9 @@ class SophiaCmpApi(object):
         self.compare_args = self.null
         rc = self.lib.print_pointer( self.compare_func, self.ffi.cast("size_t",self.platform_bits) , self.func_cffi_code)
         if rc <0:
-            raise Exception, e("error printing pointer with function code")
+            raise Exception("error printing pointer with function code")
         elif rc == 0:
-            raise Exception, e("error printing pointer, zero bytes printed, pointer may be NULL")
+            raise Exception("error printing pointer, zero bytes printed, pointer may be NULL")
 
 
 
